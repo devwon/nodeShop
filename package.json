@@ -1,0 +1,26 @@
+{
+  "name": "mypage",
+  "version": "1.0.0",
+  "description": "node쇼핑몰구축",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devwon/nodeshoppingmall.git"
+  },
+  "keywords": [
+    "쇼핑",
+    "shop"
+  ],
+  "author": "devwon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devwon/nodeshoopingmall/issues"
+  },
+  "homepage": "https://github.com/devwon/nodeshoopingmall#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
