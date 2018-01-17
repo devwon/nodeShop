@@ -10,9 +10,6 @@ app.get('/', function (req, res) {//get방식으로 보내기
     res.send('first app12');
 });
 
-app.get('/admin',function(req,res){//admin 페이지
-    res.send('admin page');
-});
 app.listen(port, function () { //서버에 띄어주는
     console.log('Express listening on port', port);
 });
