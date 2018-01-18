@@ -4,7 +4,7 @@
   "description": "node쇼핑몰구축",
   "main": "app.js",
   "scripts": {
-    "start" : "nodemon ./app.js"
+    "start": "nodemon ./app.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/devwon/nodeShop#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1",
+    "mongoose": "^4.11.2",
+    "mongoose-auto-increment": "^5.0.1"
   }
 }

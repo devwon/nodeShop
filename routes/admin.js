@@ -1,6 +1,6 @@
 var express = require('express');//module 가져오기
 
-var admin = require('./routes/admin');//위에 위치해야해!
+var admin = require('./admin');//위에 위치해야해!
 
 var router = express.Router();
 
