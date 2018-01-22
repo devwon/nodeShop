@@ -1,4 +1,3 @@
-
 //express module 설치했으니 require('express')사용가능
 var express = require('express');
 
@@ -23,7 +22,7 @@ var port = 3000;
 
 
 app.get('/', function (req, res) {//get방식으로 보내기
-    res.send('first app12');
+    res.send('first app!!');
 });
 
 app.use('/admin', admin);
