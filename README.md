@@ -9,6 +9,11 @@ Develop Stack
 API 서버 | Node.js
 DB | MongoDB
 
+First Header | Second Header
+------------ | -------------
+서버 | Ubuntu ( AWS )
+배포 | Docker
+
 Content from cell 1 | Content from cell 2
 - 서버 : Ubuntu ( AWS )
 - 배포 : Docker
