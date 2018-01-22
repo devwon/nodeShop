@@ -10,11 +10,12 @@ router.get('/',function(req,res){
 //admin/이후의 url을 적는다
 //res.send("admin products");
 router.get('/products', function (req, res) {
-    res.render('admin/products',{
-        message : "hello",
-        name : "HYERIN"
-    } // message 란 변수를 템플릿으로 내보낸다.
-    );
+    ProductsModel.find(function(err, products){//인자는 에러와 products
+        res.render('admin/products',
+            { products : products}//두번째 products가 위의 인자
+            //DB에서 받은 products를 products변수명으로 내보냄
+        );
+    });
 });
 //작성 폼-get으로 라우팅
 router.get('/products/write', function (req, res) {

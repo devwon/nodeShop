@@ -1,5 +1,3 @@
-
-<!--<%= message + " " + name%>=빼고 자바스크립트 코드 넣어도 돼!-->
 <% include ../header.ejs %>
 
     <table class="table table-bordered table-hover">
@@ -8,15 +6,17 @@
             <th>작성일</th>
             <th>삭제</th>
         </tr>
+        <% products.forEach( function(product){ %>
         <tr>
-            <td>제품 이름</td>
+            <td><%=product.name %></td>
             <td>
-                2017-07-15
+                <%=product.created_at%>
             </td>
             <td>
                 <a href="#" class="btn btn-danger">삭제</a>
             </td>
         </tr>
+        <% }); %>
     </table>
 
     <a href="/admin/products/write" class="btn btn-default">작성하기</a>

@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 //MongoDB 접속 express아래에 위치해야함!
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;//nodejs내의 promise로 바꿔라
 var autoIncrement = require('mongoose-auto-increment');//key value 생성을 위한 모듈
 
 var db = mongoose.connection;
