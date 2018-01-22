@@ -4,6 +4,7 @@
         <tr>
             <th>제목</th>
             <th>작성일</th>
+            <th>가격(원)</th>
             <th>삭제</th>
         </tr>
         <% products.forEach( function(product){ %>
@@ -11,6 +12,9 @@
             <td><%=product.name %></td>
             <td>
                 <%=product.created_at%>
+            </td>
+            <td>
+                <%=product.price%>
             </td>
             <td>
                 <a href="#" class="btn btn-danger">삭제</a>
