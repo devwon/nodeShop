@@ -2,7 +2,7 @@
 
 [Develop Stack]
 
-기능 | stack
+분야 | stack
 ------------ | -------------
 서버 | Ubuntu ( AWS )
 배포 | Docker
