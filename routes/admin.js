@@ -11,7 +11,7 @@ router.get('/',function(req,res){
 //res.send("admin products");
 router.get('/products', function (req, res) {
     ProductsModel.find(function(err, products){//인자는 에러와 products
-        res.render('admin/products',
+        res.render('admin/products',//views의 위치
             { products : products}//두번째 products가 위의 인자
             //DB에서 받은 products를 products변수명으로 내보냄
         );

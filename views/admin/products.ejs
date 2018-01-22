@@ -9,9 +9,11 @@
         </tr>
         <% products.forEach( function(product){ %>
         <tr>
-            <td><%=product.name %></td>
+            <td><%=product.name%></td>
             <td>
-                <%=product.created_at%>
+                <%=product.getDate.year%> 년
+                <%=product.getDate.month%> 월
+                <%=product.getDate.day%> 일
             </td>
             <td>
                 <%=product.price%>
