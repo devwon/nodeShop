@@ -21,9 +21,11 @@
   },
   "homepage": "https://github.com/devwon/nodeShop#readme",
   "dependencies": {
+    "ejs": "^2.5.7",
     "express": "^4.16.2",
     "mongodb": "^3.0.1",
     "mongoose": "^4.11.2",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose-auto-increment": "^5.0.1",
+    "path": "^0.12.7"
   }
 }

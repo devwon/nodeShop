@@ -9,7 +9,13 @@ router.get('/',function(req,res){
 });
 
 //admin/이후의 url을 적는다
-router.get('/products',function(req,res){
-    res.send("admin products");
+//res.send("admin products");
+router.get('/products', function (req, res) {
+    res.render('admin/products',{
+        message : "hello",
+        name : "HYERIN"
+    } // message 란 변수를 템플릿으로 내보낸다.
+    );
 });
+
 module.exports = router;
