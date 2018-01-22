@@ -2,14 +2,18 @@
 
     <table class="table table-bordered table-hover">
         <tr>
-            <th>제목</th>
+            <th>상품명</th>
             <th>작성일</th>
             <th>가격(원)</th>
             <th>삭제</th>
         </tr>
         <% products.forEach( function(product){ %>
         <tr>
-            <td><%=product.name%></td>
+            <td>
+                <a href="/admin/products/detail/<%=product.id%>">
+                    <%=product.name%>
+                </a>
+            </td>
             <td>
                 <%=product.getDate.year%> 년
                 <%=product.getDate.month%> 월

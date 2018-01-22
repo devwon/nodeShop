@@ -1,0 +1,31 @@
+<% include ../header.ejs %>
+    
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <%=product.name%>
+        </div>
+        <div class="panel-body">
+            <div style="padding-bottom: 10px">
+                작성일 : 
+                <%=product.getDate.year%>년 
+                <%=product.getDate.month%>월 
+                <%=product.getDate.day%>일 
+            </div>
+
+            <%=product.description%>
+
+
+        </div>
+    </div>
+
+    <a href="/admin/products" class="btn btn-default">목록으로</a>
+    <a href="/admin/products/edit/<%=product.id%>" class="btn btn-primary">수정</a>
+
+    
+
+        
+
+
+<% include ../footer.ejs %>
