@@ -2,7 +2,7 @@
 
 Develop Stack
 기능 | 내용
------------- | -------------
+--- | ---
 서버 | Ubuntu ( AWS )
 배포 | Docker
 웹서버 | NGINX
