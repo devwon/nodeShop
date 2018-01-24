@@ -6,7 +6,17 @@ var autoIncrement = require('mongoose-auto-increment');
 var ContactsSchema = new Schema({
     id: String, //id
     phoneNumber: Number, //연락처
-    joined_at: Date //회원가입일
+    joined_at: Date//회원가입일
+});
+
+ContactsSchema.virtual('getDate').get(function(){//virtual 변수
+    var date = new Date(this.joined_at);
+    return {
+        year: date.getFullYear(),
+        month: date.getMonth()+1,
+        day: date.getDay()
+
+    };
 });
 
 //db로 보내기

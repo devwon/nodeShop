@@ -10,12 +10,13 @@ router.get('/',function(req,res){
 //contacts/이후의 url을 적는다.
 router.get('/list',function(req,res){
     ContactsModel.find(function(err,contacts){
-        res.render('contacts/',
+        res.render('contacts/list',
             {contacts : contacts}
         );
     });
 });
 
+//작성 페이지
 router.get('/write',function(req,res){
     res.render('contacts/form',{contacts:""});
 });
@@ -28,6 +29,13 @@ router.post('/write',function(req,res){
     });
     contacts.save(function(err){
         res.redirect('/contacts');
+    });
+});
+
+//상세 페이지
+router.get('/detail/:id',function(req,res){
+    ContactsModel.findOne({'id':req.params.id},function(err,contacts){
+        res.render('contacts/contactsDetail',{contacts: contacts});
     });
 });
 

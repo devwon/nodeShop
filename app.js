@@ -2,7 +2,7 @@
 var express = require('express');
 var path = require('path'); //미들웨어의 윗부분에 적혀있어야함!
 var logger = require('morgan');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');//javascript 객체로 편하게 사용하기 위해 bodyparser 이용
 
 //MongoDB 접속 express아래에 위치해야함!
 var mongoose = require('mongoose');
@@ -32,7 +32,7 @@ app.set('view engine', 'ejs');
 
 
 //미들웨어는 항상 라우팅 오기 전에
-//미들웨어 셋팅(request객체에 변수를 추가)
+//미들웨어 셋팅(request객체에 변수를 추가), POST는 body의 데이터를 가져옴
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));

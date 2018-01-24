@@ -43,7 +43,7 @@ router.get('/products/detail/:id', function(req, res){
 
 //제품 수정 페이지
 router.get('/products/edit/:id',function(req,res){
-    ProductsModel.findOne({'id': req.params.id},function(err, product){
+    ProductsModel.findOne({'id': req.params.id},function(err, product){//
         res.render('admin/form',{product:product});
     });
 });
@@ -62,5 +62,12 @@ router.post('/products/edit/:id', function (req, res) {
         res.redirect('/admin/products/detail/' + req.params.id); //수정후 본래보던 상세페이지로 이동
     });
 });
+
+//제품 삭제 페이지
+router.get('/products/delete/:id',function(req,res){
+    ProductsModel.remove({ id: req.params.id }, function (err) {//params<-parameter
+        res.redirect('/admin/products');//절대 경로로 써줘
+    });
+});//require로 따로 뺄 수 있어
 
 module.exports = router;

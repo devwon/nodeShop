@@ -5,7 +5,7 @@
             <th>상품명</th>
             <th>작성일</th>
             <th>가격(원)</th>
-            <th>삭제</th>
+            <th></th>
         </tr>
         <% products.forEach( function(product){ %>
         <tr>
@@ -23,7 +23,7 @@
                 <%=product.price%>
             </td>
             <td>
-                <a href="#" class="btn btn-danger">삭제</a>
+                <a href="/admin/products/delete/<%=product.id%>" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
             </td>
         </tr>
         <% }); %>
