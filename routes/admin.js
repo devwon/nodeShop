@@ -2,6 +2,7 @@ var express = require('express');//module 가져오기
 var admin = require('./admin');//위에 위치해야해!
 var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
+var CommentsModel = require('../models/CommentsModel');
 
 router.get('/',function(req,res){
     res.send("admin app router");
@@ -69,5 +70,7 @@ router.get('/products/delete/:id',function(req,res){
         res.redirect('/admin/products');//절대 경로로 써줘
     });
 });//require로 따로 뺄 수 있어
+
+
 
 module.exports = router;

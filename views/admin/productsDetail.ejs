@@ -18,13 +18,50 @@
 
 
         </div>
+        <div>
+            댓글작성하기
+            <form id="commentForm" action="" method="post">
+                <input type="hidden" name="product_id" value="<%=product.id%>" />
+                <textarea class="form-control" name="content"></textarea>
+                <button class="btn btn-primary" style="margin-top: 10px">댓글작성</button>
+            </form>
+        </div>
+    <!-- 댓글영역  -->
     </div>
+
+    <!-- 댓글영역  -->
+
 
     <a href="/admin/products" class="btn btn-default">목록으로</a>
     <a href="/admin/products/edit/<%=product.id%>" class="btn btn-primary">수정</a>
 
     
-
+<script>
+    $(document).ready(function(){
+       $('#commentForm').submit(function(){
+            var $contentVal = $(this).children('textarea[name=content]').val();
+            //alert($contentVal);
+            
+            if($contentVal){
+                $.ajax({
+                    url: '/admin/products/ajax_comment/insert',
+                    type: 'POST',
+                    data: $(this).serialize(),//serialize: 각 데이터들을 mapping을 해주는 함수
+                })
+                .done(function(args){
+                    console.log(args);
+                })
+                .fail(function(args){
+                    console.log(args);
+                });
+            }
+            else{
+                alert("댓글 내용을 입력해주세요.");
+            }
+            return false;
+       }); 
+    });
+</script>
         
 
 

@@ -26,7 +26,7 @@ var contacts = require('./routes/contacts');
 var app = express();
 var port = 3000;
 
-// 확장자가 ejs 로 끝나는 뷰 엔진을 추가한다.
+// 확장자가 ejs 로 끝나는 뷰view 엔진을 추가한다.
 app.set('views', path.join(__dirname, 'views'));//console.log(__dirname);//_dirname은 내 ROUTE를 알려줌
 app.set('view engine', 'ejs');
 
