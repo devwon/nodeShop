@@ -19,7 +19,7 @@ router.get('/products', function (req, res) {
 });
 //작성 폼-get으로 라우팅
 router.get('/products/write', function (req, res) {
-    res.render('admin/form');
+    res.render('admin/form',{product: ""});//product변수는 빈걸로 선언해주고 시작
 });
     
 router.post('/products/write', function (req, res) {
@@ -33,10 +33,33 @@ router.post('/products/write', function (req, res) {
     });
 });
 
+//제품 상세 페이지
 router.get('/products/detail/:id', function(req, res){
     //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
     ProductsModel.findOne({'id': req.params.id},function(err, product){//findOne(조건,콜백함수)는 한 줄의 데이터만 가져와
         res.render('admin/productsDetail', {product:product});
+    });
+});
+
+//제품 수정 페이지
+router.get('/products/edit/:id',function(req,res){
+    ProductsModel.findOne({'id': req.params.id},function(err, product){
+        res.render('admin/form',{product:product});
+    });
+});
+
+//수정 완료 후 저장
+router.post('/products/edit/:id', function (req, res) {
+    //넣을 변수 값을 셋팅한다
+    var query = {
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+    };
+
+    //update의 첫번째 인자는 조건, 두번째 인자는 바뀔 값들
+    ProductsModel.update({ id: req.params.id }, { $set: query }, function (err) {
+        res.redirect('/admin/products/detail/' + req.params.id); //수정후 본래보던 상세페이지로 이동
     });
 });
 
