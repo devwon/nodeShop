@@ -13,20 +13,32 @@
                 <%=product.getDate.month%>월 
                 <%=product.getDate.day%>일 
             </div>
-
+            
             <%=product.description%>
 
+            <!-- 댓글영역  -->
+            <hr />
+            <div id="comment_area">
+            <% comments.forEach( function(comment){ %>
+            <div>
+                <%=comment.content%>
+                [<a class='comment_delete' comment_id='<%=comment.id%>'>삭제</a>]
+            </div>
+            <%});%>
+            </div>
 
-        </div>
+        
         <div>
-            댓글작성하기
+            <br><b>댓글작성하기</b>
             <form id="commentForm" action="" method="post">
                 <input type="hidden" name="product_id" value="<%=product.id%>" />
                 <textarea class="form-control" name="content"></textarea>
                 <button class="btn btn-primary" style="margin-top: 10px">댓글작성</button>
             </form>
         </div>
-    <!-- 댓글영역  -->
+        </div>
+    
+    
     </div>
 
     <!-- 댓글영역  -->
@@ -35,7 +47,7 @@
     <a href="/admin/products" class="btn btn-default">목록으로</a>
     <a href="/admin/products/edit/<%=product.id%>" class="btn btn-primary">수정</a>
 
-    
+<!--ajax client부분-->
 <script>
     $(document).ready(function(){
        $('#commentForm').submit(function(){
@@ -49,18 +61,44 @@
                     data: $(this).serialize(),//serialize: 각 데이터들을 mapping을 해주는 함수
                 })
                 .done(function(args){
-                    console.log(args);
+                    if(args.message==="success"){
+                        $('#comment_area').append(
+                            //댓글추가시 삭제버튼도 같이 생기도록
+                            '<div>'+args.content+
+                            "[<a class='comment_delete' comment_id='"+ args.id+"'>삭제</a>] </div>"
+                        );
+                        $('#commentForm textarea[name=content]').val("");
+                    }
+                    //console.log(args);//message 하나만 출력
                 })
                 .fail(function(args){
                     console.log(args);
                 });
-            }
-            else{
+            }else{
                 alert("댓글 내용을 입력해주세요.");
             }
             return false;
-       }); 
+       });
     });
+    
+    $(document).on('click','.comment_delete',function(){
+        if(confirm('삭제하시겠습니까?')){
+            var $self =$(this); //여기서 this는 해당 댓글의 <a>태그를 뜻함
+            $.ajax({
+                url: '/admin/products/ajax_comment/delete',
+                type: 'POST',
+                data: {comment_id : $self.attr('comment_id')},//변수의 attribute로 접근
+            });
+            .done(function(){
+                $self.parent().remove();//<a>태그의 parent니까 <div>
+                alert("삭제가 완료되었습니다.");
+            })
+            .fail(function(args){
+                console.log(args);
+            });
+        }
+    });
+
 </script>
         
 

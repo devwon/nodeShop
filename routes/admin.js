@@ -24,26 +24,36 @@ router.get('/products/write', function (req, res) {
 });
     
 router.post('/products/write', function (req, res) {
-    var product = new ProductsModel({//mongoose에서 insert하는 방식:key field 일치 시켜주기
+    var product = new ProductsModel({
         name: req.body.name,
         price: req.body.price,
         description: req.body.description,
     });
-    product.save(function (err) {//DB에 저장, 
-        res.redirect('/admin/products');//새로고침시 다시 저장될 수 있으니 save button 클릭시 list페이지로 이동
-    });
+    var validationError = product.validateSync();
+    if (validationError) {
+        res.send(validationError);
+    } else {
+        product.save(function (err) {
+            res.redirect('/admin/products');
+        });
+    }
 });
 
-//제품 상세 페이지
+//제품 상세 페이지//콜백 3개
 router.get('/products/detail/:id', function(req, res){
     //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
     ProductsModel.findOne({'id': req.params.id},function(err, product){//findOne(조건,콜백함수)는 한 줄의 데이터만 가져와
-        res.render('admin/productsDetail', {product:product});
+        //res.render('admin/productsDetail', {product:product});
+        CommentsModel.find({ product_id: req.params.id }, function (err, comments) {
+            res.render('admin/productsDetail',
+                {product : product, comments : comments });
+        });
     });
 });
 
 //제품 수정 페이지
 router.get('/products/edit/:id',function(req,res){
+    //기존에 폼에 value안에 값을 셋팅하기 위해서 만든다.
     ProductsModel.findOne({'id': req.params.id},function(err, product){//
         res.render('admin/form',{product:product});
     });
@@ -71,6 +81,26 @@ router.get('/products/delete/:id',function(req,res){
     });
 });//require로 따로 뺄 수 있어
 
+//댓글 기능
+router.post('/products/ajax_comment/insert',function(req,res){
+    var comment = new CommentsModel({
+        content: req.body.content,
+        product_id: parseInt(req.body.product_id)
+    });
+    comment.save(function(err,comment){
+        res.json({
+            id : comment.id,
+            content : comment.content,
+            message : "success"
+        });
+    });
+});
 
+//댓글 삭제 기능
+router.post('/products/ajax_comment/delete', function (req, res) {
+    CommentsModel.remove({ id: req.body.comment_id }, function (err) {
+        res.json({ message: "success" });
+    });
+});
 
 module.exports = router;
