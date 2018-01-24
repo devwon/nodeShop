@@ -1,0 +1,26 @@
+<% include ../header.ejs %>
+
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>id</th>
+            <th>연락처</th>
+            <th>가입일</th>
+        </tr>
+        <% products.forEach( function(product){ %>
+        <tr>
+            <td>
+                아이디입니다.
+            </td>
+            <td>
+                연락처입니다.
+            </td>
+            <td>
+                가입일 입니다.
+            </td>
+        </tr>
+        <% }); %>
+    </table>
+
+    <a href="/contacts/write" class="btn btn-default">작성하기</a>
+
+<% include ../footer.ejs %>
