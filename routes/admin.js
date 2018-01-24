@@ -29,10 +29,9 @@ router.post('/products/write', function (req, res) {
         price: req.body.price,
         description: req.body.description,
     });
-    var validationError = product.validateSync();
-    if (validationError) {
-        res.send(validationError);
-    } else {
+    //유효성체크 후 DB로 넘길지 말지 결정
+   
+    if (!product.validateSync()) {
         product.save(function (err) {
             res.redirect('/admin/products');
         });
