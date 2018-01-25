@@ -10,6 +10,7 @@ router.get('/',function(req,res){
 
 //admin/이후의 url을 적는다
 //res.send("admin products");
+//products list 페이지
 router.get('/products', function (req, res) {
     ProductsModel.find(function(err, products){//인자는 에러와 products
         res.render('admin/products',//views의 위치
@@ -30,7 +31,6 @@ router.post('/products/write', function (req, res) {
         description: req.body.description,
     });
     //유효성체크 후 DB로 넘길지 말지 결정
-   
     if (!product.validateSync()) {
         product.save(function (err) {
             res.redirect('/admin/products');

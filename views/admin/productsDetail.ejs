@@ -20,11 +20,11 @@
             <hr />
             <div id="comment_area">
             <% comments.forEach( function(comment){ %>
-            <div>
-                <%=comment.content%>
-                [<a class='comment_delete' comment_id='<%=comment.id%>'>삭제</a>]
-            </div>
-            <%});%>
+                <div><%#이 태그가 remove된다.%>
+                    <%=comment.content%>
+                    [<a class='comment_delete' comment_id='<%=comment.id%>'>삭제</a>]
+                </div>
+            <% }); %>
             </div>
 
         
@@ -69,7 +69,7 @@
                         );
                         $('#commentForm textarea[name=content]').val("");
                     }
-                    //console.log(args);//message 하나만 출력
+                    //console.log(args.message);//message 하나만 출력
                 })
                 .fail(function(args){
                     console.log(args);
@@ -82,13 +82,13 @@
     });
     
     $(document).on('click','.comment_delete',function(){
-        if(confirm('삭제하시겠습니까?')){
-            var $self =$(this); //여기서 this는 해당 댓글의 <a>태그를 뜻함
+        if(confirm('삭제하시겠습니까?')){//확인창에 눌렀을 시만 진행
+            var $self = $(this); //여기서 this는 해당 댓글의 <a>태그를 뜻함
             $.ajax({
                 url: '/admin/products/ajax_comment/delete',
                 type: 'POST',
                 data: {comment_id : $self.attr('comment_id')},//변수의 attribute로 접근
-            });
+            })
             .done(function(){
                 $self.parent().remove();//<a>태그의 parent니까 <div>
                 alert("삭제가 완료되었습니다.");
