@@ -13,7 +13,11 @@
                 <%=product.getDate.month%>월 
                 <%=product.getDate.day%>일 
             </div>
-            
+            <%if(product.thumbnail){%>
+                <p>
+                <img src ='/uploads/<%=product.thumbnail%>' style="max-width: 100%" />
+                </p>
+            <%}%>
             <%=product.description%>
 
             <!-- 댓글영역  -->

@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path'); //미들웨어의 윗부분에 적혀있어야함!
 var logger = require('morgan');
 var bodyParser = require('body-parser');//javascript 객체로 편하게 사용하기 위해 bodyparser 이용
+//cookie 사용 가능하게 설정
+var cookieParser = require('cookie-parser');
 
 //MongoDB 접속 express아래에 위치해야함!
 var mongoose = require('mongoose');
@@ -31,12 +33,18 @@ app.set('views', path.join(__dirname, 'views'));//console.log(__dirname);//_dirn
 app.set('view engine', 'ejs');
 
 
-//미들웨어는 항상 라우팅 오기 전에
-//미들웨어 셋팅(request객체에 변수를 추가), POST는 body의 데이터를 가져옴
+//미들웨어는 항상! 라우팅 오기 전!에
+//미들웨어 셋팅(=request 객체에 변수를 추가/request.file 이런 식으로), POST는 body의 데이터를 가져옴
+//모든 라우팅이 오기전에 요청을 먼저 가로채는 미들웨어
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
+app.use(cookieParser());//cookie parser 사용
 
+//업로드 path 추가
+app.use('/uploads',express.static('uploads'));
+
+//라우팅
 app.get('/', function (req, res) {//get방식으로 보내기
     res.send('first app!!');
 });

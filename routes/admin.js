@@ -4,6 +4,34 @@ var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
 var CommentsModel = require('../models/CommentsModel');
 
+//미들웨어 연습
+function testMiddleWare(req, res, next) {
+    console.log('미들웨어 작동');
+    next();
+}
+
+//csrf 셋팅
+var csrf = require('csurf');
+var csrfProtection = csrf({ cookie : true});
+
+//이미지 저장되는 위치 설정
+var path = require('path');
+var uploadDir = path.join(__dirname, '../uploads'); // 루트의 uploads위치에 저장한다.
+var fs = require('fs');
+
+//multer 셋팅
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) { //이미지가 저장되는 도착지 지정
+        callback(null, uploadDir);
+    },
+    filename: function (req, file, callback) { // products-날짜.jpg(png) 저장 
+        callback(null, 'products-' + Date.now() + '.' + file.mimetype.split('/')[1]);
+    }
+});
+var upload = multer({ storage: storage });
+
+//admin 화면
 router.get('/',function(req,res){
     res.send("admin app router");
 });
@@ -11,7 +39,7 @@ router.get('/',function(req,res){
 //admin/이후의 url을 적는다
 //res.send("admin products");
 //products list 페이지
-router.get('/products', function (req, res) {
+router.get('/products', testMiddleWare , function (req, res) {
     ProductsModel.find(function(err, products){//인자는 에러와 products
         res.render('admin/products',//views의 위치
             { products : products}//두번째 products가 위의 인자
@@ -19,18 +47,21 @@ router.get('/products', function (req, res) {
         );
     });
 });
-//작성 폼-get으로 라우팅
-router.get('/products/write', function (req, res) {
-    res.render('admin/form',{product: ""});//product변수는 빈걸로 선언해주고 시작
+//작성 폼-get으로 라우팅//csrf걸기
+router.get('/products/write',csrfProtection, function (req, res) {
+    res.render('admin/form', { product: "" ,csrfToken: req.csrfToken() });//product변수는 빈걸로 선언해주고 시작, token발행해줌
 });
     
-router.post('/products/write', function (req, res) {
+router.post('/products/write',upload.single('thumbnail'),csrfProtection, function (req, res) {//csrfProtection 토큰을 확인하고 DB에 저장
+    console.log(req.file);
+
     var product = new ProductsModel({
         name: req.body.name,
+        thumbnail: (req.file) ? req.file.filename : "",//thumbnail 필드명을 DB에 저장/(조건)?결과:아니면
         price: req.body.price,
         description: req.body.description,
     });
-    //유효성체크 후 DB로 넘길지 말지 결정
+    //유효성체크(validation check) 후 DB로 넘길지 말지 결정
     if (!product.validateSync()) {
         product.save(function (err) {
             res.redirect('/admin/products');
@@ -51,26 +82,31 @@ router.get('/products/detail/:id', function(req, res){
 });
 
 //제품 수정 페이지
-router.get('/products/edit/:id',function(req,res){
+router.get('/products/edit/:id',csrfProtection,function(req,res){
     //기존에 폼에 value안에 값을 셋팅하기 위해서 만든다.
     ProductsModel.findOne({'id': req.params.id},function(err, product){//
-        res.render('admin/form',{product:product});
+        res.render('admin/form', { product: product, csrfToken: req.csrfToken()});//token 발행
     });
 });
 
 //수정 완료 후 저장
-router.post('/products/edit/:id', function (req, res) {
-    //넣을 변수 값을 셋팅한다
-    var query = {
-        name: req.body.name,
-        price: req.body.price,
-        description: req.body.description,
-    };
+router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, function (req, res) {
+        
+    //그전에 지정되있는 파일명id을 받아온다.
+    ProductsModel.findOne({ id: req.params.id }, function (err, product) {
+        //넣을 변수 값을 셋팅한다
+        var query = {
+            name: req.body.name,
+            thumbnail: (req.file)? req.file.filename: product.thumbnail,
+            price: req.body.price,
+            description: req.body.description,
+        };
 
-    //update의 첫번째 인자는 조건, 두번째 인자는 바뀔 값들
-    ProductsModel.update({ id: req.params.id }, { $set: query }, function (err) {
-        res.redirect('/admin/products/detail/' + req.params.id); //수정후 본래보던 상세페이지로 이동
-    });
+        //update의 첫번째 인자는 조건, 두번째 인자는 바뀔 값들
+        ProductsModel.update({ id: req.params.id }, { $set: query }, function (err) {
+            res.redirect('/admin/products/detail/' + req.params.id); //수정후 본래보던 상세페이지로 이동
+        });
+    });   
 });
 
 //제품 삭제 페이지
