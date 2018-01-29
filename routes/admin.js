@@ -94,6 +94,11 @@ router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, fu
         
     //그전에 지정되있는 파일명id을 받아온다.
     ProductsModel.findOne({ id: req.params.id }, function (err, product) {
+        
+        if(req.file && product.thumbnail){//기존에 파일이 있었던 경우에만 파일 삭제 가능
+            fs.unlinkSync(uploadDir+'/'+product.thumbnail);
+        }
+        
         //넣을 변수 값을 셋팅한다
         var query = {
             name: req.body.name,
