@@ -1,0 +1,70 @@
+<% include ../header.ejs %>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="login-panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">회원가입</h3>
+            </div>
+            <div class="panel-body">
+                <form role="form" action="" id="join_form" method="post">
+                    <fieldset>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="ID" name="username" type="text" autofocus="" required="">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password" name="password" type="password" value="" required="">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password 확인" name="password2" type="password" value="" required="">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="이름" name="displayname" type="text" value="" required="">
+                        </div>
+                        <!-- Change this to a button or input when using this as a form -->
+                        <input type="submit" class="btn btn-lg btn-success btn-block" value="가입하기">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--하위버전을 위한 javascript validation-->
+<script type="text/javascript">
+(function(){
+    $(document).ready(function() {
+        $('#join_form').submit(function(){
+            var $usernameInput = $('#join_form input[name=username]');
+            var $passwordInput = $('#join_form input[name=password]');
+            var $passwordInput2 = $('#join_form input[name=password2]');
+            var $displayname = $('#join_form input[name=displayname]');
+
+            if(!$usernameInput.val()){
+                alert("아이디를 입력해주세요.");
+                $usernameInput.focus();
+                return false;
+            }
+            if(!$passwordInput.val()){
+                alert("패스워드를 입력해주세요.");
+                $passwordInput.focus();
+                return false;
+            }
+            if(!$passwordInput2.val()){
+                alert("확인 패스워드를 입력해주세요.");
+                $passwordInput2.focus();
+                return false;
+            }
+            if(!$displayname.val()){
+                alert("이름을 입력해주세요.");
+                $displayname.focus();
+                return false;
+            }
+            if($passwordInput.val() !== $passwordInput2.val()){
+                alert("패스워드와 확인용패스워드를 똑같이 입력해주세요.");
+                return false;
+            }
+            return true;
+        });
+    });
+})();
+</script>
+<% include ../footer.ejs %>

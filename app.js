@@ -22,6 +22,7 @@ autoIncrement.initialize(connect);
 
 
 var admin = require('./routes/admin');
+var accounts =require('./routes/accounts');
 //contacts
 var contacts = require('./routes/contacts');
 
@@ -51,6 +52,7 @@ app.get('/', function (req, res) {//get방식으로 보내기
 
 app.use('/admin', admin);
 app.use('/contacts', contacts);
+app.use('/accounts', accounts);
 
 app.listen(port, function () { //서버에 띄어주는
     console.log('Express listening on port', port);
