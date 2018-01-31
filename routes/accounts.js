@@ -14,8 +14,10 @@ passport.serializeUser(function(user,done){
 });
 //deserializeUser
 passport.deserializeUser(function(user,done){
+    var result = user;
+    result.password="";
     console.log('deserializeUser');
-    done(null,user);
+    done(null,result);
 });
 
 passport.use(new LocalStrategy({
@@ -41,7 +43,7 @@ router.get('/',function(req,res){
     res.send('account app');
 });
 router.get('/join',function(req,res){
-    res.render('accounts/join', { flashMessage :req.flash().error});
+    res.render('accounts/join');
 });
 
 //라우팅
@@ -59,7 +61,7 @@ router.post('/join',function(req,res){
 });
 
 router.get('/login',function(req,res){
-    res.render('accounts/login');
+    res.render('accounts/login', { flashMessage: req.flash().error });
 });
 
 router.post('/login',

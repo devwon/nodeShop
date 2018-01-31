@@ -28,11 +28,12 @@ db.once('open', function () {
 var connect = mongoose.connect('mongodb://127.0.0.1:27017/fastcampus', { useMongoClient: true });
 autoIncrement.initialize(connect);
 
-
+//라우터 작성
 var admin = require('./routes/admin');
 var accounts =require('./routes/accounts');
 //contacts
 var contacts = require('./routes/contacts');
+var auth = require('./routes/auth');
 
 var app = express();
 var port = 3000;
@@ -81,6 +82,7 @@ app.get('/', function (req, res) {//get방식으로 보내기
 app.use('/admin', admin);
 app.use('/contacts', contacts);
 app.use('/accounts', accounts);
+app.use('/auth', auth);
 
 app.listen(port, function () { //서버에 띄어주는
     console.log('Express listening on port', port);
