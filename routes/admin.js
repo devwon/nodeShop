@@ -92,7 +92,7 @@ router.get('/products/edit/:id',csrfProtection,function(req,res){
 //수정 완료 후 저장
 router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, function (req, res) {
         
-    //그전에 지정되있는 파일명id을 받아온다.
+    //*그전에 지정되있는 파일명id을 받아온다.
     ProductsModel.findOne({ id: req.params.id }, function (err, product) {
         
         if(req.file && product.thumbnail){//기존에 파일이 있었던 경우에만 파일 삭제 가능

@@ -12,7 +12,7 @@ var UserSchema = new Schema({
         required: [true, '패스워드는 필수입니다.']
     },
     displayname: String,
-    created_at: {
+    created_at: {//회원가입일
         type: Date,
         default: Date.now()
     }
