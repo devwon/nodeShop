@@ -3,7 +3,7 @@ var admin = require('./admin');//위에 위치해야해!
 var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
 var CommentsModel = require('../models/CommentsModel');
-
+var loginRequired = require('../libs/loginRequired');
 //미들웨어 연습
 function testMiddleWare(req, res, next) {
     console.log('미들웨어 작동');
@@ -48,11 +48,11 @@ router.get('/products', testMiddleWare , function (req, res) {
     });
 });
 //작성 폼-get으로 라우팅//csrf걸기
-router.get('/products/write',csrfProtection, function (req, res) {
+router.get('/products/write',loginRequired, csrfProtection, function (req, res) {
     res.render('admin/form', { product: "" ,csrfToken: req.csrfToken() });//product변수는 빈걸로 선언해주고 시작, token발행해줌
 });
     
-router.post('/products/write',upload.single('thumbnail'),csrfProtection, function (req, res) {//csrfProtection 토큰을 확인하고 DB에 저장
+router.post('/products/write',loginRequired, upload.single('thumbnail'),csrfProtection, function (req, res) {//csrfProtection 토큰을 확인하고 DB에 저장
     console.log(req.file);
 
     var product = new ProductsModel({
@@ -60,6 +60,7 @@ router.post('/products/write',upload.single('thumbnail'),csrfProtection, functio
         thumbnail: (req.file) ? req.file.filename : "",//thumbnail 필드명을 DB에 저장/(조건)?결과:아니면
         price: req.body.price,
         description: req.body.description,
+        username : req.user.username,
     });
     //유효성체크(validation check) 후 DB로 넘길지 말지 결정
     if (!product.validateSync()) {
@@ -82,7 +83,7 @@ router.get('/products/detail/:id', function(req, res){
 });
 
 //제품 수정 페이지
-router.get('/products/edit/:id',csrfProtection,function(req,res){
+router.get('/products/edit/:id', loginRequired, csrfProtection,function(req,res){
     //기존에 폼에 value안에 값을 셋팅하기 위해서 만든다.
     ProductsModel.findOne({'id': req.params.id},function(err, product){//
         res.render('admin/form', { product: product, csrfToken: req.csrfToken()});//token 발행
@@ -90,7 +91,7 @@ router.get('/products/edit/:id',csrfProtection,function(req,res){
 });
 
 //수정 완료 후 저장
-router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, function (req, res) {
+router.post('/products/edit/:id', loginRequired, upload.single('thumbnail'), csrfProtection, function (req, res) {
         
     //*그전에 지정되있는 파일명id을 받아온다.
     ProductsModel.findOne({ id: req.params.id }, function (err, product) {
@@ -115,7 +116,7 @@ router.post('/products/edit/:id', upload.single('thumbnail'), csrfProtection, fu
 });
 
 //제품 삭제 페이지
-router.get('/products/delete/:id',function(req,res){
+router.get('/products/delete/:id', loginRequired,function(req,res){
     ProductsModel.remove({ id: req.params.id }, function (err) {//params<-parameter
         res.redirect('/admin/products');//절대 경로로 써줘
     });

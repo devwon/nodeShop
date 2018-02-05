@@ -14,7 +14,8 @@ var ProductsSchema = new Schema({
     created_at: { //작성일
         type: Date,
         default: Date.now()
-    }
+    },
+    username: String//작성자 추가
 });
 
 //virtual 변수는 호출되면 실행하는 함수

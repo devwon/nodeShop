@@ -35,6 +35,8 @@ var accounts =require('./routes/accounts');
 var contacts = require('./routes/contacts');
 //auth
 var auth = require('./routes/auth');
+//home
+var home = require('./routes/home');
 
 var app = express();
 var port = 3000;
@@ -82,17 +84,12 @@ app.use(function(req,res,next){
 });
 
 
-
-
-//라우팅
-app.get('/', function (req, res) {//get방식으로 보내기
-    res.send('first app!!');
-});
-
+//라우팅 routing
 app.use('/admin', admin);
 app.use('/contacts', contacts);
 app.use('/accounts', accounts);
 app.use('/auth', auth);
+app.use('/',home);
 
 app.listen(port, function () { //서버에 띄어주는
     console.log('Express listening on port', port);

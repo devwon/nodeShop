@@ -1,0 +1,33 @@
+<% include ./header.ejs %>
+    <div class="container" id="masonry_container">
+        <% products.forEach(function(product){ %>
+        <div class="masonry-grid">
+            <%if(product.thumbnail){%>
+                <img src="/uploads/<%=product.thumbnail%>">
+            <%}%>
+            <p>
+                <%=product.title%><br />
+                by <%=product.username%>(
+                <%=product.getDate.year%>.
+                <%=product.getDate.month%>.
+                <%=product.getDate.day%>
+                )
+            </p>
+        </div>
+        <%});%>
+    </div>
+<style type="text/css">
+.masonry-grid img { max-width: 260px; }
+</style>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.1/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript">
+    var $masonry_container = $('#masonry_container');
+    $masonry_container.imagesLoaded(function(){
+      $masonry_container.masonry({
+        itemSelector : '.masonry-grid',
+        columnWidth : 270
+      });
+    });
+</script>
+<% include ./footer.ejs %>
