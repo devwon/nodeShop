@@ -37,6 +37,8 @@ var contacts = require('./routes/contacts');
 var auth = require('./routes/auth');
 //home
 var home = require('./routes/home');
+//chat
+var chat = require('./routes/chat');
 
 var app = express();
 var port = 3000;
@@ -89,8 +91,15 @@ app.use('/admin', admin);
 app.use('/contacts', contacts);
 app.use('/accounts', accounts);
 app.use('/auth', auth);
-app.use('/',home);
+app.use('/chat', chat);
+app.use('/', home);
 
-app.listen(port, function () { //서버에 띄어주는
+
+var server = app.listen(port, function () { //서버에 띄어주는
     console.log('Express listening on port', port);
 });
+
+var listen = require('socket.io');
+var io = listen(server);//server 붙여버리기
+
+require('./libs/socketConnection')(io);//불러오고 바로 실행

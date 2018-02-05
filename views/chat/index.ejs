@@ -1,0 +1,54 @@
+<% include ../header.ejs %>
+
+    <div class="panel panel-default" id="chatWrap">
+        <div class="panel-heading">대화내용</div>
+        <div class="panel-body">
+            <ul id="chatBody"></ul>
+        </div>
+    </div>
+
+    <form action="" method="post" id="sendForm">
+
+        <div class="input-group">
+            <input type="hidden" name="socketId">
+            <input type="text" name="message" class="form-control" placeholder="대화내용을 입력해주세요.">
+            <span class="input-group-btn">
+                <button class="btn btn-primary">작성하기</button>
+            </span>
+        </div><!-- /input-group -->
+
+    </form>  
+
+
+
+<style type="text/css">
+.panel-default ul { padding-left:0px; }
+.panel-default ul li { list-style:none; padding-left:0px;}
+.panel-default .panel-body {min-height:350px; max-height:350px;  overflow-y:scroll; }
+#chatWrap ul li strong::after { content: " : "; }
+@media (max-width: 768px) { 
+    #userWrap { display:none; }
+    #chatWrap .panel-body { min-height:250px; }
+}
+</style>
+<script src="/socket.io/socket.io.js"></script>  <!--자동으로 정적으로 잡아놔줌-->
+<script>
+(function(){
+    var socket = io();//socket.io.js에 있는 io라는 함수//서버와 연결하는 코드
+    
+    socket.on('server message',function(data){
+        $('#chatBody').append('<li>'+data+'</li>');
+        
+    });
+
+    $(document).ready(function(){
+        $('#sendForm').submit(function(){
+            var $massage = $('#sendForm input[name=message]');
+            socket.emit('client message',{message:$massage.val()});
+            $massage.val('');
+            return false;
+        });
+    });
+})();
+</script>
+<% include ../footer.ejs %>
