@@ -33,6 +33,7 @@ var admin = require('./routes/admin');
 var accounts =require('./routes/accounts');
 //contacts
 var contacts = require('./routes/contacts');
+//auth
 var auth = require('./routes/auth');
 
 var app = express();
