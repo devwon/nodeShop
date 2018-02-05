@@ -1,12 +1,25 @@
 <% include ../header.ejs %>
-
-    <div class="panel panel-default" id="chatWrap">
-        <div class="panel-heading">대화내용</div>
-        <div class="panel-body">
-            <ul id="chatBody"></ul>
+<div class="row">
+    <div class="col-sm-10">
+        <div class="panel panel-default" id="chatWrap">
+            <div class="panel-heading">대화내용</div>
+            <div class="panel-body">
+                <ul id="chatBody"></ul>
+            </div>
         </div>
     </div>
+    <!--user list-->
+    <div class="col-sm-2">
+        <div class="panel panel-default" id="userWrap">
+            <div class="panel-heading">User</div>
+            <div class="panel-body">
+                <ul id="userList"></ul>  
+            </div>
+        </div>
+    </div>    
+</div>
 
+<div>
     <form action="" method="post" id="sendForm">
 
         <div class="input-group">
@@ -19,7 +32,7 @@
 
     </form>  
 
-
+</div>
 
 <style type="text/css">
 .panel-default ul { padding-left:0px; }
@@ -31,24 +44,39 @@
     #chatWrap .panel-body { min-height:250px; }
 }
 </style>
-<script src="/socket.io/socket.io.js"></script>  <!--자동으로 정적으로 잡아놔줌-->
+<script src="/socket.io/socket.io.js"></script><!--자동으로 정적으로 잡아놔줌-->
 <script>
 (function(){
     var socket = io();//socket.io.js에 있는 io라는 함수//서버와 연결하는 코드
-    
-    socket.on('server message',function(data){
-        $('#chatBody').append('<li>'+data+'</li>');
-        
-    });
 
-    $(document).ready(function(){
+    function updateUserList(userList){
+        $('#userList').html("");
+        for(var key in userList){
+            $('#userList').append('<li>' + userList[key] + '</li>');
+        }
+
+    }
+    socket.on('join',function(data){
+        updateUserList(data);
+    });
+    
+    socket.on('leave', function(data){
+        updateUserList(data);
+    });
+    
+    socket.on('server message', function(data){
+        $('#chatBody').append('<li><strong>' + data.displayname + '</strong>'+data.message+'</li>');
+    });
+ 
+    $(document).ready(function() {
         $('#sendForm').submit(function(){
-            var $massage = $('#sendForm input[name=message]');
-            socket.emit('client message',{message:$massage.val()});
-            $massage.val('');
+            var $message = $('#sendForm input[name=message]');
+            socket.emit('client message', { message : $message.val()});
+            $message.val('');
             return false;
         });
     });
+ 
 })();
 </script>
 <% include ../footer.ejs %>

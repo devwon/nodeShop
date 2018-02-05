@@ -46,11 +46,12 @@ passport.use(new FacebookStrategy({
         });
     }
 ));
-
+//github
 passport.use(new GitHubStrategy({
     clientID: "9d5b4693266a26637d5b",
     clientSecret: "f1b2b8abacaf8a98591494fe256189ae4bbb490b",
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/github/callback",
+    profileFields: ['id', 'displayName', 'photos', 'email'] //받고 싶은 필드 나열
 },
     function (accessToken, refreshToken, profile, done) {
         //console.log(profile.id);//id test

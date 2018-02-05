@@ -60,14 +60,22 @@ app.use(cookieParser());//cookie parser 사용
 app.use('/uploads',express.static('uploads'));
 
 //session 관련 셋팅
-app.use(session({
+var connectMongo = require('connect-mongo');
+var MongoStore = connectMongo(session);
+
+var sessionMiddleWare = session({
     secret: 'fastcampus',
     resave: false,
     saveUninitialized: true,
     cookie: {
         maxAge: 2000 * 60 * 60 //지속시간 2시간
-    }
-}));
+    },
+    store: new MongoStore({//storage로 저장하면 서버 부담 줄어듬
+        mongooseConnection: mongoose.connection,
+        ttl: 14 * 24 * 60 * 60
+    })
+});
+app.use(sessionMiddleWare);
 
 //passport 적용
 app.use(passport.initialize());
@@ -101,5 +109,9 @@ var server = app.listen(port, function () { //서버에 띄어주는
 
 var listen = require('socket.io');
 var io = listen(server);//server 붙여버리기
+//socket io passport 접근하기 위한 미들웨어 적용
+io.use(function(socket,next){//io.use
+    sessionMiddleWare(socket.request,socket.request.res,next);
+});
 
 require('./libs/socketConnection')(io);//불러오고 바로 실행
