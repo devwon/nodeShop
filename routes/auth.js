@@ -54,14 +54,14 @@ passport.use(new GitHubStrategy({
     profileFields: ['id', 'displayName', 'photos', 'email'] //받고 싶은 필드 나열
 },
     function (accessToken, refreshToken, profile, done) {
-        //console.log(profile.id);//id test
+        console.log(profile);//id test
         
         UserModel.findOne({ username: "git_"+profile.id},function(err,user){
             if(!user){
                 var regData={
                     username:"git_"+profile.id,
                     password: "github_login",
-                    displayName:profile.displayname
+                    displayName:profile.name
                 };
                 var User = new UserModel(regData);
                 User.save(function (err){//DB저장

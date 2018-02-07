@@ -4,11 +4,15 @@ var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
 var CommentsModel = require('../models/CommentsModel');
 var loginRequired = require('../libs/loginRequired');
+var co = require('co');
+
+
 //미들웨어 연습
 function testMiddleWare(req, res, next) {
     console.log('미들웨어 작동');
     next();
 }
+
 
 //csrf 셋팅
 var csrf = require('csurf');
@@ -72,13 +76,18 @@ router.post('/products/write',loginRequired, upload.single('thumbnail'),csrfProt
 
 //제품 상세 페이지//콜백 3개
 router.get('/products/detail/:id', function(req, res){
-    //url 에서 변수 값을 받아올떈 req.params.id 로 받아온다
-    ProductsModel.findOne({'id': req.params.id},function(err, product){//findOne(조건,콜백함수)는 한 줄의 데이터만 가져와
-        //res.render('admin/productsDetail', {product:product});
-        CommentsModel.find({ product_id: req.params.id }, function (err, comments) {
-            res.render('admin/productsDetail',
-                {product : product, comments : comments });
-        });
+    
+    var getData = async ()=>{
+        var product = await ProductsModel.findOne({ 'id': req.params.id }).sort().exec();
+        console.log(product.id);//콜백 대신
+        var comments = await CommentsModel.find({ 'product_id': req.params.id }).exec();
+        return {
+            product: product,
+            comments: comments
+        };
+    };
+    getData().then(function (result) {
+        res.render('admin/productsDetail', { product: result.product, comments: result.comments });
     });
 });
 
@@ -142,6 +151,10 @@ router.post('/products/ajax_comment/delete', function (req, res) {
     CommentsModel.remove({ id: req.body.comment_id }, function (err) {
         res.json({ message: "success" });
     });
+});
+
+router.post('/products/ajax_summernote',loginRequired,upload.single('thumnail'),function(req,res){
+    res.send('/uploads/'+req.file.filename);
 });
 
 module.exports = router;

@@ -21,12 +21,53 @@
                 <td><input type="text" name="price" class="form-control" value="<%=product.price%>"/></td>
             </tr>
             <tr>
-                <th>설명</th>
-                <td><input type="text" name="description" class="form-control" value="<%=product.description%>"/></td>
+            
+            <th>설명</th>
+                <td>
+                    <textarea name="description" class="form-control" id="summernote"><%-product.description%></textarea>
+                </td>
             </tr>
+
 
         </table>
         <button class="btn btn-primary">작성하기</button>
     </form>
+
+<!-- 스타일관련 -->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.css" rel="stylesheet">
+<!-- 자바스크립트관련 -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.js"></script>
+<!-- 한글관련 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/lang/summernote-ko-KR.min.js"></script>
+
+<script>
+$(document).ready(function(){
+
+    $('#summernote').summernote({
+        lang: 'ko-KR',
+		height: 300,
+        callback: {
+            onImageUpload: function(files){
+                sendFile(files[0]);
+            }
+        }
+    });
+    function sendFile(file, editor, welEditable){
+        data = new FormData();
+        data.append("thumnail",files);
+        $.ajax({
+            data: data,
+            type: "POST",
+            url: '/admin/products/ajax_summernote/',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(url) {
+                $('#summernote').summernote("insertImage", url);
+            }
+        });
+    }
+});
+</script>
 
 <% include ../footer.ejs %>
