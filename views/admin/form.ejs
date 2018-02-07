@@ -1,5 +1,5 @@
 <% include ../header.ejs %>
-    <form action="" method="post" enctype="multipart/form-data"><!--form 재사용을 위해 action을 비워둬/ 폼 전송타입 enctype 추가-->
+    <form action="" method="post" enctype="multipart/form-data" id="editForm"><!--form 재사용을 위해 action을 비워둬/ 폼 전송타입 enctype 추가-->
         <input type="hidden" name="_csrf" value="<%=csrfToken%>" /><!--토큰값-->
         <table class="table table-bordered">
 
@@ -52,6 +52,11 @@ $(document).ready(function(){
             }
         }
     });
+
+    $('#editForm').submit(function(){
+        $('input[name=files]').remove();//input이 이미 있으면 지운다. input 요청이 하나만 되게<-summernote 섬네일 에러 처리
+    });
+
     function sendFile(file, editor, welEditable){
         data = new FormData();
         data.append("thumnail",files);

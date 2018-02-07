@@ -153,6 +153,7 @@ router.post('/products/ajax_comment/delete', function (req, res) {
     });
 });
 
+//summernote editor
 router.post('/products/ajax_summernote',loginRequired,upload.single('thumnail'),function(req,res){
     res.send('/uploads/'+req.file.filename);
 });
