@@ -35,10 +35,12 @@ var accounts =require('./routes/accounts');
 var contacts = require('./routes/contacts');
 //auth
 var auth = require('./routes/auth');
-//home
-var home = require('./routes/home');
 //chat
 var chat = require('./routes/chat');
+//cart
+var products = require('./routes/products');
+//home
+var home = require('./routes/home');
 
 var app = express();
 var port = 3000;
@@ -58,6 +60,9 @@ app.use(cookieParser());//cookie parser 사용
 
 //업로드 path 추가
 app.use('/uploads',express.static('uploads'));
+
+//static path 추가
+app.use('/static', express.static('static'));
 
 //session 관련 셋팅
 var connectMongo = require('connect-mongo');
@@ -100,6 +105,7 @@ app.use('/contacts', contacts);
 app.use('/accounts', accounts);
 app.use('/auth', auth);
 app.use('/chat', chat);
+app.use('/products', products);
 app.use('/', home);
 
 

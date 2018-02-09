@@ -1,0 +1,155 @@
+<% include ../header.ejs %>
+    
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <%=product.name%>
+        </div>
+        <div class="panel-body">
+            <div style="padding-bottom: 10px">
+                작성일 : 
+                    <%=product.getDate.year%> -
+                    <%=product.getDate.month%> -
+                    <%=product.getDate.day%>
+            </div>
+
+            <% if(product.thumbnail){%>
+            <p>
+                <img src="/uploads/<%=product.thumbnail%>" style="max-width: 100%"/>
+            </p>
+            <% } %>
+
+            <%-product.description%>
+
+            <hr />
+
+    <form action="" method="post" id="cartForm">
+            <!--hidden info-->
+            <!--가격 -->
+            <input type="hidden" name="price" value="<%=product.price%>">
+            <!--갯수 -->
+            <input type="hidden" name="number" value="1">
+            <!--선택한 갯수 * 가격 = 구매가격 -->
+            <input type="hidden" name="amount" value="<%=product.price%>">
+            <div>
+                <div class="printNum">갯수 : </div>
+                <div class="CountBox">
+                    <a href="#" type="minus">-</a>
+                    <p id="amountHtml">1</p>
+                    <a href="#" type="plus">+</a>
+                </div>
+                <div class="priceWrap">
+                    금액 : <span id="priceHtml"><%=product.price%></span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="/" class="btn btn-default">목록으로</a>
+    <button class="btn btn-primary">장바구니 담기</button>
+
+    </form>
+
+<style>
+.printNum { 
+    float:left;
+    margin-right: 10px; 
+}
+.CountBox { 
+    width: 100px; 
+    float:left; 
+}
+.CountBox a { 
+    border : 1px solid #ddd; 
+    display:block; 
+    float:left; 
+    padding: 4px 8px; 
+    text-decoration: none;
+}
+.CountBox p { 
+    border-top : 1px solid #ddd; 
+    border-bottom : 1px solid #ddd; 
+    display:block; 
+    float:left; 
+    padding: 4px 8px; 
+}
+
+.priceWrap { 
+    float:right; 
+    font-size: 20px;
+}
+
+.priceWrap span::after { 
+    content : " 원";
+}
+</style>
+
+<script>
+$(document).ready(function(){
+    $('.CountBox a').click(function(event){
+        event.preventDefault();//이동을 막아줌
+        //타입을 받아온다
+        var type = $(this).attr('type');
+
+        //현재 장바구니에 담을 갯수를 저장
+        var cartNum = $('input[name=number]').val();
+
+        //현재 제품의 가격표
+        var price = $('input[name=price]').val();
+        if(type==='minus'){ //+,- 냐에 따라 나눈다
+            cartNum -= ( (cartNum==1) ? 0 : 1 ); //1이하로는 못내려가게 한다 
+        }else if(type==='plus'){
+            cartNum++; 
+        }
+        //input 태그에 반영 , html페이지 에도 반영
+        $('input[name=number]').val(cartNum);
+        $('#amountHtml').html(cartNum);
+        $('input[name=amount]').val(cartNum * price);
+        $('#priceHtml').html(cartNum * price);
+        
+
+    });
+
+});
+
+$('#cartForm').submit(function(){
+    if(confirm('장바구니에 담겠습니까?')){
+        //장바구니에 담길 ID,사진,이름을 받는다
+        var productId = <%=product.id%>;
+        var thumbnail = "<%=product.thumbnail%>";
+        var name = "<%=product.name%>";
+
+        //갯수와 총량을 담는다.
+        var number = $('input[name=number]').val();
+        var amount = $('input[name=amount]').val();
+
+        var cartList = {};
+        var totalAmount = 0;
+        if( getCookie('cartList') ){ 
+            //쿠키에서 검색후 있으면 json 파싱함
+            cartList = JSON.parse(getCookie('cartList'));
+        }
+
+        cartList[productId] = { 
+            number : number , 
+            amount : amount ,
+            thumbnail : thumbnail,
+            name : name,
+        };
+        
+        // string으로 저장되는데 나중에 {}형식으로 받기위해 stringfy로 저장
+        setCookieHour( "cartList" , JSON.stringify(cartList) , 3 );
+
+        alert("장바구니에 담았습니다.");
+    }
+
+    return false;
+});
+
+</script>
+
+
+<% include ../footer.ejs %>
