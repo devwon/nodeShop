@@ -31,6 +31,7 @@
     "dotenv": "^5.0.0",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
+    "express-paginate": "^0.3.0",
     "express-session": "^1.15.6",
     "mongodb": "^3.0.1",
     "mongoose": "^4.11.2",

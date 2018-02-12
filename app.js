@@ -37,10 +37,13 @@ var contacts = require('./routes/contacts');
 var auth = require('./routes/auth');
 //chat
 var chat = require('./routes/chat');
-//cart
+//products
 var products = require('./routes/products');
+//cart
+var cart = require('./routes/cart');
 //home
 var home = require('./routes/home');
+
 
 var app = express();
 var port = 3000;
@@ -106,6 +109,7 @@ app.use('/accounts', accounts);
 app.use('/auth', auth);
 app.use('/chat', chat);
 app.use('/products', products);
+app.use('/cart', cart);
 app.use('/', home);
 
 

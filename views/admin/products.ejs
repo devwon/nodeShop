@@ -28,7 +28,29 @@
         </tr>
         <% }); %>
     </table>
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="<%= paginate.href(true) %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        <% pages.forEach(function(page){ %>
+            <li class="<%= paginate.page == page.number ? 'active' : ''%>">
+                <a href="<%= page.url %>"><%= page.number %></a>
+            </li>
+        <%})%>
 
+        <%if(paginate.hasNextPages(pageCount)){%>
+            <li>
+                <a href="<%= paginate.href() %>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <%}%>
+        </ul>
+    </nav>
+    
     <a href="/admin/products/write" class="btn btn-default">작성하기</a>
 
 <% include ../footer.ejs %>

@@ -5,7 +5,7 @@ var ProductsModel = require('../models/ProductsModel');
 var CommentsModel = require('../models/CommentsModel');
 var loginRequired = require('../libs/loginRequired');
 var co = require('co');
-
+var paginate = require('express-paginate');
 
 //미들웨어 연습
 function testMiddleWare(req, res, next) {
@@ -43,14 +43,32 @@ router.get('/',function(req,res){
 //admin/이후의 url을 적는다
 //res.send("admin products");
 //products list 페이지
-router.get('/products', testMiddleWare , function (req, res) {
+router.get('/products', paginate.middleware(5, 50), async (req, res) => {//한 페이지에 보이는 개수
+
+    const [results, itemCount] = await Promise.all([
+        ProductsModel.find().limit(req.query.limit).skip(req.skip).exec(),
+        ProductsModel.count({})
+    ]);
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+
+    const pages = paginate.getArrayPages(req)(4, pageCount, req.query.page);//슬라이더 개수
+
+    res.render('admin/products', {
+        products: results,
+        pages: pages,
+        pageCount: pageCount,
+    });
+
+});
+    /*
     ProductsModel.find(function(err, products){//인자는 에러와 products
         res.render('admin/products',//views의 위치
             { products : products}//두번째 products가 위의 인자
             //DB에서 받은 products를 products변수명으로 내보냄
         );
     });
-});
+    */
+
 //작성 폼-get으로 라우팅//csrf걸기
 router.get('/products/write',loginRequired, csrfProtection, function (req, res) {
     res.render('admin/form', { product: "" ,csrfToken: req.csrfToken() });//product변수는 빈걸로 선언해주고 시작, token발행해줌
