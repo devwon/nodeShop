@@ -60,13 +60,20 @@
                 <tr>
                     <th>주소</th>
                     <td>
-                        <input type="text" name="buyer_addr" class="form-control" />
+                        <input type="text" name="buyer_addr" class="form-control" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>상세주소</th>
+                    <td>
+                        <input type="text" name="detail_addr" class="form-control" />
                     </td>
                 </tr>
                 <tr>
                     <th>우편번호</th>
                     <td>
-                        <input type="text" name="buyer_postcode" class="form-control" placeholder="000-000" />
+                        <input type="text" name="buyer_postcode" class="form-control" placeholder="000-000" readonly />
+                        <span style="margin-top:10px" class="btn btn-primary" onclick="setDaumPostcode()">우편번호 찾기</span>
                     </td>
                 </tr>
             </tbody>
@@ -75,8 +82,10 @@
             <button class="btn btn-primary">구매하기</button>
         </div>
     </form>
+<!--Iamport 결제 연동-->    
 <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.2.js"></script>
-
+<!--주소록 연동-->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
 $(document).ready(function(){
     $('#orderForm').submit(function(){
@@ -84,7 +93,7 @@ $(document).ready(function(){
         var buyer_email = $('input[name=buyer_email]').val();
         var buyer_name = $('input[name=buyer_name]').val();
         var buyer_tel = $('input[name=buyer_tel]').val();
-        var buyer_addr = $('input[name=buyer_addr]').val();
+        var buyer_addr = $('input[name=buyer_addr]').val() + ' / ' + $('input[name=detail_addr]').val();//주소+상세주소
         var buyer_postcode = $('input[name=buyer_postcode]').val();
 
         var IMP = window.IMP; 
@@ -142,6 +151,49 @@ $(document).ready(function(){
         return false;
     });
 });
+
+function setDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+            var fullAddr = ''; // 최종 주소 변수
+            var extraAddr = ''; // 조합형 주소 변수
+
+            // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                fullAddr = data.roadAddress;
+
+            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                fullAddr = data.jibunAddress;
+            }
+
+            // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+            if(data.userSelectedType === 'R'){
+                //법정동명이 있을 경우 추가한다.
+                if(data.bname !== ''){
+                    extraAddr += data.bname;
+                }
+                // 건물명이 있을 경우 추가한다.
+                if(data.buildingName !== ''){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+            }
+
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            $('input[name=buyer_postcode]').val(data.zonecode);
+            $('input[name=buyer_addr]').val(fullAddr);
+            
+            // 커서를 상세주소 필드로 이동한다.
+            $('input[name=detail_addr]').focus();
+        }
+    }).open();
+}
+
 </script>
 
 <% include ../footer.ejs %>
