@@ -17,7 +17,7 @@ passport.use(new FacebookStrategy({
     // https://developers.facebook.com에서 appId 및 scretID 발급
     clientID: "409665479471096", //앱 ID
     clientSecret: "178b7928dea72495d5f0fd30fbbee810", //입력하세요.
-    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    callbackURL: "http://localhost:4000/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email'] //받고 싶은 필드 나열
 },
     function (accessToken, refreshToken, profile, done) {
@@ -50,7 +50,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GitHubStrategy({
     clientID: "9d5b4693266a26637d5b",
     clientSecret: "f1b2b8abacaf8a98591494fe256189ae4bbb490b",
-    callbackURL: "http://127.0.0.1:3000/auth/github/callback",
+    callbackURL: "http://127.0.0.1:4000/auth/github/callback",
     profileFields: ['id', 'displayName', 'photos', 'email'] //받고 싶은 필드 나열
 },
     function (accessToken, refreshToken, profile, done) {
@@ -61,7 +61,7 @@ passport.use(new GitHubStrategy({
                 var regData={
                     username:"git_"+profile.id,
                     password: "github_login",
-                    displayName:profile.name
+                    displayName: profile.name
                 };
                 var User = new UserModel(regData);
                 User.save(function (err){//DB저장
@@ -73,6 +73,7 @@ passport.use(new GitHubStrategy({
         });
     }
 ));
+
 // http://localhost:3000/auth/facebook 접근시 facebook으로 넘길 url 작성해줌
 router.get('/facebook',passport.authenticate('facebook',{scope:'email'}));
 // http://localhost:3000/auth/github 접근시 github로 넘길 url 작성해줌

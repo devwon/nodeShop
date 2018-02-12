@@ -41,12 +41,14 @@ var chat = require('./routes/chat');
 var products = require('./routes/products');
 //cart
 var cart = require('./routes/cart');
+//checkout
+var checkout = require('./routes/checkout');
+
 //home
 var home = require('./routes/home');
 
-
 var app = express();
-var port = 3000;
+var port = 4000;
 
 // 확장자가 ejs 로 끝나는 뷰view 엔진을 추가한다.
 app.set('views', path.join(__dirname, 'views'));//console.log(__dirname);//_dirname은 내 ROUTE를 알려줌
@@ -110,6 +112,7 @@ app.use('/auth', auth);
 app.use('/chat', chat);
 app.use('/products', products);
 app.use('/cart', cart);
+app.use('/checkout', checkout);
 app.use('/', home);
 
 

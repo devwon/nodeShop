@@ -1,0 +1,147 @@
+<% include ../header.ejs %>
+    <h3 class="page-header">결제페이지</h3>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th></th>
+            <th>제품명</th>
+            <th>갯수</th>
+            <th>총가격</th>
+        </tr>
+
+        <% 
+            if( Object.keys(cartList).length ){ 
+                for( let key in cartList){
+        %>
+            <tr>
+                <td>
+                    <img src="/uploads/<%=cartList[key].thumbnail%>" alt="" width="50" height="50" />
+                </td>
+                <td><%=cartList[key].name%></td>
+                <td><%=cartList[key].number%></td>
+                <td><%=cartList[key].amount%> 원</td>
+            </tr>
+        <%
+                } //end for
+            }else{
+        %>
+            <tr>
+                <td colspan="4" style="text-align:center">장바구니에 아무것도 안담겼습니다.</td>
+            </tr>
+        <%}%>
+    </table>
+
+
+    <div class="text-center" style="font-size:30px; margin-bottom:20px;">
+        결제금액 : <span style="color:red"> <%=totalAmount%> </span> 원
+    </div>
+
+    <form action="" id ="orderForm">
+        <h3 class="text-center">배송지정보</h3>
+        <table class="table table-bordered table-hover" style="max-width:500px; margin:0 auto;">
+            <tbody>
+                <tr>
+                    <th>이메일</th>
+                    <td>
+                        <input type="text" name="buyer_email" class="form-control"  placeholder="abc@abc.com" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>구매자이름</th>
+                    <td>
+                        <input type="text" name="buyer_name" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>핸드폰번호</th>
+                    <td>
+                        <input type="text" name="buyer_tel" class="form-control"  placeholder="010-0000-0000" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td>
+                        <input type="text" name="buyer_addr" class="form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>우편번호</th>
+                    <td>
+                        <input type="text" name="buyer_postcode" class="form-control" placeholder="000-000" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center" style="margin : 30px 0 100px 0">
+            <button class="btn btn-primary">구매하기</button>
+        </div>
+    </form>
+<script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.2.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('#orderForm').submit(function(){
+        var amount = <%=totalAmount%>;
+        var buyer_email = $('input[name=buyer_email]').val();
+        var buyer_name = $('input[name=buyer_name]').val();
+        var buyer_tel = $('input[name=buyer_tel]').val();
+        var buyer_addr = $('input[name=buyer_addr]').val();
+        var buyer_postcode = $('input[name=buyer_postcode]').val();
+
+        var IMP = window.IMP; 
+        IMP.init('imp32032143'); 
+        //아임호트 사이트에서 받아온다( http://www.iamport.kr/ )
+        IMP.request_pay({
+            pg : 'inicis',
+            pay_method : 'card',
+            merchant_uid : 'merchant_' + new Date().getTime(),
+            name : '수업:결제테스트',
+            amount : amount ,
+            buyer_email : buyer_email,
+            buyer_name : buyer_name,
+            buyer_tel : buyer_tel,
+            buyer_addr : buyer_addr,
+            buyer_postcode : buyer_postcode,
+            m_redirect_url : 'http://localhost:3000/checkout/mobile_complete'
+        }, function(rsp){
+            if ( rsp.success ) {
+                
+                //요청 성공후 ajax POST요청한다.
+                $.ajax({
+                    url: '/checkout/complete',
+                    type: 'POST',
+                    data : {
+                        imp_uid : rsp.imp_uid,
+                        merchant_uid : rsp.merchant_uid,
+                        paid_amount : rsp.paid_amount,
+                        apply_num : rsp.apply_num,
+                        
+                        buyer_email : buyer_email,
+                        buyer_name : buyer_name,
+                        buyer_tel : buyer_tel,
+                        buyer_addr : buyer_addr,
+                        buyer_postcode : buyer_postcode,
+
+                        status : "결제완료",
+                    }
+                }).done( function(res){
+                    alert("결제가 완료되었습니다.");
+                    document.location.href = "/checkout/success";
+                }).fail( function(error){
+                    console.log(error); 
+                });
+
+            } else {
+                let msg = '결제에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+                alert(msg);
+            }
+            
+
+        });
+
+        return false;
+    });
+});
+</script>
+
+<% include ../footer.ejs %>
