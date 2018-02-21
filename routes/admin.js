@@ -185,5 +185,13 @@ router.get('/order', function (req, res) {
         );
     });
 });
+//order edit
+router.get('/order/edit/:id', function (req, res) {
+    CheckoutModel.findOne({ id: req.params.id }, function (err, order) {
+        res.render('admin/orderForm',
+            { order: order }
+        );
+    });
+});
 
 module.exports = router;

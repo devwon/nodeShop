@@ -1,3 +1,5 @@
+//import { format } from 'util';
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var autoIncrement = require('mongoose-auto-increment');
@@ -32,6 +34,11 @@ CheckoutSchema.virtual('getDate').get(function () {
         month: date.getMonth() + 1,
         day: date.getDate()
     };
+});
+//numberformat
+CheckoutSchema.virtual('getAmountFormat').get(function () {
+    // 1000원을 1,000원으로 바꿔준다.
+    return new Intl.NumberFormat().format(this.paid_amount);
 });
 
 CheckoutSchema.plugin(autoIncrement.plugin, { model: "checkout", field: "id", startAt: 1 });

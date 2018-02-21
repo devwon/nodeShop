@@ -1,0 +1,66 @@
+<% include ../header.ejs %>
+
+    <% include ./sidebar.ejs %>
+
+    <div class="col-sm-10">
+
+        <h3>주문상세표</h3>
+        <form action="" method="post">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th>주문자</th>
+                        <td>
+                            <%=order.buyer_name%> ( <%=order.buyer_email%> )
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>금액</th>
+                        <td>
+                            <%=order.getAmountFormat%> 원
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td>
+                            <%=order.buyer_addr%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>주문일</th>
+                        <td>
+                            <%=order.getDate.year%> - 
+                            <%=order.getDate.month%> - 
+                            <%=order.getDate.day%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>결재상태</th>
+                        <td>
+                            <select name="status"
+                                class="form-control" 
+                                style="max-width:120px">
+                                <option value="">없음</option>
+                                <option value="결재완료" <%if(order.status==='결재완료'){%>selected<%}%>>결재완료</option>
+                                <option value="배송중" <%if(order.status==='배송중'){%>selected<%}%>>배송중</option>
+                                <option value="배송완료" <%if(order.status==='배송완료'){%>selected<%}%>>배송완료</option>
+                                <option value="구매완료" <%if(order.status==='구매완료'){%>selected<%}%>>구매완료</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>송장번호</th>
+                        <td>
+                            <input type="text" name="song_jang" class="form-control" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="/admin/order" class="btn btn-default">목록으로</a>
+            <button class="btn btn-primary">상태변경</button>
+        </form>
+    </div>
+
+    
+
+<% include ../footer.ejs %>

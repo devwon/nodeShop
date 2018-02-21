@@ -110,35 +110,10 @@ $(document).ready(function(){
             buyer_tel : buyer_tel,
             buyer_addr : buyer_addr,
             buyer_postcode : buyer_postcode,
-            m_redirect_url : 'http://localhost:3000/checkout/mobile_complete'
+            m_redirect_url : 'http://localhost:3000/checkout/complete'
         }, function(rsp){
-            if ( rsp.success ) {
-                
-                //요청 성공후 ajax POST요청한다.
-                $.ajax({
-                    url: '/checkout/complete',
-                    type: 'POST',
-                    data : {
-                        imp_uid : rsp.imp_uid,
-                        merchant_uid : rsp.merchant_uid,
-                        paid_amount : rsp.paid_amount,
-                        apply_num : rsp.apply_num,
-                        
-                        buyer_email : buyer_email,
-                        buyer_name : buyer_name,
-                        buyer_tel : buyer_tel,
-                        buyer_addr : buyer_addr,
-                        buyer_postcode : buyer_postcode,
-
-                        status : "결제완료",
-                    }
-                }).done( function(res){
-                    alert("결제가 완료되었습니다.");
-                    document.location.href = "/checkout/success";
-                }).fail( function(error){
-                    console.log(error); 
-                });
-
+           if ( rsp.success ) {
+                document.location.href = "/checkout/complete?imp_uid=" + rsp.imp_uid;
             } else {
                 let msg = '결제에 실패하였습니다.';
                 msg += '에러내용 : ' + rsp.error_msg;
