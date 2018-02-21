@@ -38,7 +38,10 @@
                         <li class="active">
                             <a href="/">Home</a>
                         </li>
-                        <li><a href="/admin/products">ADMIN</a></li>
+                        <!--관리자일 경우에만 admin 메뉴 활성화-->
+                        <% if(typeof(userData)!=='undefined' && userData.username==='admin'){%>
+                            <li><a href="/admin/products">ADMIN</a></li>
+                        <%}%>
                         <li><a href="/chat">CHAT</a></li>
                         <li><a href="/cart">CART</a></li>
                         <% if(isLogin){%>
@@ -47,6 +50,9 @@
                             <li><a href="/accounts/join">JOIN</a></li> 
                             <li><a href="/accounts/login">LOGIN</a></li>  
                         <%}%>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/checkout/nomember">구매조회</a></li> 
                     </ul> 
                 </div> 
             </div> 

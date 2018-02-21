@@ -1,0 +1,35 @@
+<% include ../header.ejs %>
+<div>
+    <h3>구매이력</h3>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>주문자(이메일)</th>
+            <th>결재상태</th>
+            <th>금액</th>
+            <th>주소</th>
+            <th>주문일</th>
+        </tr>
+        <% checkoutList.forEach( function(checkout){ %>
+        <tr>
+            <td>
+                <%=checkout.buyer_name%> ( <%=checkout.buyer_email%> )
+            </td>
+            <td><%=checkout.status%></td>
+            <td><%=checkout.getAmountFormat%> 원</td>
+            <td><%=checkout.buyer_addr%></td>
+            <td>
+                <%=checkout.getDate.year%> - 
+                <%=checkout.getDate.month%> - 
+                <%=checkout.getDate.day%>
+            </td>
+        </tr>
+        <%});%>
+        <% if(checkoutList.length==0){ %>
+        <tr>
+            <td colspan="5">구매이력이 존재하지 않습니다.</td>
+        </tr>
+        <%}%>
+    </table>
+    <a href="/checkout/nomember" class="btn btn-default">조회화면으로</a>
+</div>
+<% include ../footer.ejs %>

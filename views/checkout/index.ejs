@@ -98,7 +98,7 @@ $(document).ready(function(){
 
         var IMP = window.IMP; 
         IMP.init('imp32032143'); 
-        //아임호트 사이트에서 받아온다( http://www.iamport.kr/ )
+        //아임포트 사이트에서 받아온다( http://www.iamport.kr/ )
         IMP.request_pay({
             pg : 'inicis',
             pay_method : 'card',
@@ -110,6 +110,8 @@ $(document).ready(function(){
             buyer_tel : buyer_tel,
             buyer_addr : buyer_addr,
             buyer_postcode : buyer_postcode,
+
+            
             m_redirect_url : 'http://localhost:3000/checkout/complete'
         }, function(rsp){
            if ( rsp.success ) {

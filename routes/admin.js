@@ -3,7 +3,9 @@ var admin = require('./admin');//위에 위치해야해!
 var router = express.Router();
 var ProductsModel = require('../models/ProductsModel');
 var CommentsModel = require('../models/CommentsModel');
-var loginRequired = require('../libs/loginRequired');
+//var loginRequired = require('../libs/loginRequired');
+//관리자 권한
+var adminRequired = require('../libs/adminRequired');
 var co = require('co');
 var paginate = require('express-paginate');
 var CheckoutModel = require('../models/CheckoutModel');
@@ -44,7 +46,7 @@ router.get('/',function(req,res){
 //admin/이후의 url을 적는다
 //res.send("admin products");
 //products list 페이지
-router.get('/products', paginate.middleware(5, 50), async (req, res) => {//한 페이지에 보이는 개수
+router.get('/products', adminRequired, paginate.middleware(5, 50), async (req, res) => {//한 페이지에 보이는 개수
 
     const [results, itemCount] = await Promise.all([
         ProductsModel.find().limit(req.query.limit).skip(req.skip).exec(),
@@ -71,11 +73,11 @@ router.get('/products', paginate.middleware(5, 50), async (req, res) => {//한 �
     */
 
 //작성 폼-get으로 라우팅//csrf걸기
-router.get('/products/write',loginRequired, csrfProtection, function (req, res) {
+router.get('/products/write',adminRequired, csrfProtection, function (req, res) {
     res.render('admin/form', { product: "" ,csrfToken: req.csrfToken() });//product변수는 빈걸로 선언해주고 시작, token발행해줌
 });
     
-router.post('/products/write',loginRequired, upload.single('thumbnail'),csrfProtection, function (req, res) {//csrfProtection 토큰을 확인하고 DB에 저장
+router.post('/products/write',adminRequired, upload.single('thumbnail'),csrfProtection, function (req, res) {//csrfProtection 토큰을 확인하고 DB에 저장
     console.log(req.file);
 
     var product = new ProductsModel({
@@ -111,7 +113,7 @@ router.get('/products/detail/:id', function(req, res){
 });
 
 //제품 수정 페이지
-router.get('/products/edit/:id', loginRequired, csrfProtection,function(req,res){
+router.get('/products/edit/:id', adminRequired, csrfProtection,function(req,res){
     //기존에 폼에 value안에 값을 셋팅하기 위해서 만든다.
     ProductsModel.findOne({'id': req.params.id},function(err, product){//
         res.render('admin/form', { product: product, csrfToken: req.csrfToken()});//token 발행
@@ -119,7 +121,7 @@ router.get('/products/edit/:id', loginRequired, csrfProtection,function(req,res)
 });
 
 //수정 완료 후 저장
-router.post('/products/edit/:id', loginRequired, upload.single('thumbnail'), csrfProtection, function (req, res) {
+router.post('/products/edit/:id', adminRequired, upload.single('thumbnail'), csrfProtection, function (req, res) {
         
     //*그전에 지정되있는 파일명id을 받아온다.
     ProductsModel.findOne({ id: req.params.id }, function (err, product) {
@@ -144,7 +146,7 @@ router.post('/products/edit/:id', loginRequired, upload.single('thumbnail'), csr
 });
 
 //제품 삭제 페이지
-router.get('/products/delete/:id', loginRequired,function(req,res){
+router.get('/products/delete/:id', adminRequired,function(req,res){
     ProductsModel.remove({ id: req.params.id }, function (err) {//params<-parameter
         res.redirect('/admin/products');//절대 경로로 써줘
     });
@@ -173,7 +175,7 @@ router.post('/products/ajax_comment/delete', function (req, res) {
 });
 
 //summernote editor
-router.post('/products/ajax_summernote',loginRequired,upload.single('thumnail'),function(req,res){
+router.post('/products/ajax_summernote',adminRequired,upload.single('thumnail'),function(req,res){
     res.send('/uploads/'+req.file.filename);
 });
 

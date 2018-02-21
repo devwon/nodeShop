@@ -71,6 +71,14 @@ router.post('/mobile_complete', (req, res) => {
 router.get('/success', function (req, res) {
     res.render('checkout/success');
 });
-
-
+//비회원 구매일때
+router.get('/nomember',function(req,res){
+    res.render('checkout/nomember');
+});
+//비회원이 결제내역 보기위해
+router.get('/nomember/search', function (req, res) {
+    CheckoutModel.find({ buyer_email: req.query.email }, function (err, checkoutList) {
+        res.render('checkout/search', { checkoutList: checkoutList });
+    });
+});
 module.exports = router;

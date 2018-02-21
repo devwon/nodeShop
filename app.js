@@ -99,7 +99,7 @@ app.use(function(req,res,next){
     app.locals.isLogin = req.isAuthenticated();
     //app.locals.lecture = "nodejs";//app.locals는 view에서 언제든지 사용가능하게
     //app.locals.urlparameter = req.url; //현재 url 정보를 보내고 싶으면 이와같이 셋팅
-    //app.locals.userData = req.user; //사용 정보를 보내고 싶으면 이와같이 셋팅
+    app.locals.userData = req.user; //사용 정보를 보내고 싶으면 이와같이 셋팅
     next();
 });
 
