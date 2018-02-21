@@ -1,78 +1,81 @@
 <% include ../header.ejs %>
-    <form action="" method="post" enctype="multipart/form-data" id="editForm"><!--form 재사용을 위해 action을 비워둬/ 폼 전송타입 enctype 추가-->
-        <input type="hidden" name="_csrf" value="<%=csrfToken%>" /><!--토큰값-->
-        <table class="table table-bordered">
 
-            <tr>
-                <th>제품명</th>
-                <td><input type="text" name="name" class="form-control" value="<%=product.name%>" /></td>
-            </tr>
-            <tr>
-                <th>섬네일</th>
-                <td>
-                    <input type="file" name="thumbnail" />
-                    <%if(product.thumbnail){%>
-                        <a href= "/uploads/<%=product.thumbnail%>" target="_blank">업로드 이미지 보기</a>
-                    <%}%>
-                </td>
-            </tr>
-            <tr>
-                <th>가격</th>
-                <td><input type="text" name="price" class="form-control" value="<%=product.price%>"/></td>
-            </tr>
-            <tr>
-            
-            <th>설명</th>
-                <td>
-                    <textarea name="description" class="form-control" id="summernote"><%-product.description%></textarea>
-                </td>
-            </tr>
+    <% include ./sidebar.ejs %>
+    <div class="col-sm-10">
+        <form action="" method="post" enctype="multipart/form-data" id="editForm"><!--form 재사용을 위해 action을 비워둬/ 폼 전송타입 enctype 추가-->
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>" /><!--토큰값-->
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>제품명</th>
+                    <td><input type="text" name="name" class="form-control" value="<%=product.name%>" /></td>
+                </tr>
+                <tr>
+                    <th>섬네일</th>
+                    <td>
+                        <input type="file" name="thumbnail" />
+                        <%if(product.thumbnail){%>
+                            <a href= "/uploads/<%=product.thumbnail%>" target="_blank">업로드 이미지 보기</a>
+                        <%}%>
+                    </td>
+                </tr>
+                <tr>
+                    <th>가격</th>
+                    <td><input type="text" name="price" class="form-control" value="<%=product.price%>"/></td>
+                </tr>
+                <tr>
+                
+                <th>설명</th>
+                    <td>
+                        <textarea name="description" class="form-control" id="summernote"><%-product.description%></textarea>
+                    </td>
+                </tr>
 
 
-        </table>
-        <button class="btn btn-primary">작성하기</button>
-    </form>
+            </table>
+            <button class="btn btn-primary">작성하기</button>
+        </form>
 
-<!-- 스타일관련 -->
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.css" rel="stylesheet">
-<!-- 자바스크립트관련 -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.js"></script>
-<!-- 한글관련 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/lang/summernote-ko-KR.min.js"></script>
+        <!-- 스타일관련 -->
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.css" rel="stylesheet">
+        <!-- 자바스크립트관련 -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.js"></script>
+        <!-- 한글관련 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/lang/summernote-ko-KR.min.js"></script>
 
-<script>
-$(document).ready(function(){
+        <script>
+        $(document).ready(function(){
 
-    $('#summernote').summernote({
-        lang: 'ko-KR',
-		height: 300,
-        callback: {
-            onImageUpload: function(files){
-                sendFile(files[0]);
-            }
-        }
-    });
+            $('#summernote').summernote({
+                lang: 'ko-KR',
+                height: 300,
+                callback: {
+                    onImageUpload: function(files){
+                        sendFile(files[0]);
+                    }
+                }
+            });
 
-    $('#editForm').submit(function(){
-        $('input[name=files]').remove();//input이 이미 있으면 지운다. input 요청이 하나만 되게<-summernote 섬네일 에러 처리
-    });
+            $('#editForm').submit(function(){
+                $('input[name=files]').remove();//input이 이미 있으면 지운다. input 요청이 하나만 되게<-summernote 섬네일 에러 처리
+            });
 
-    function sendFile(file, editor, welEditable){
-        data = new FormData();
-        data.append("thumnail",files);
-        $.ajax({
-            data: data,
-            type: "POST",
-            url: '/admin/products/ajax_summernote/',
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(url) {
-                $('#summernote').summernote("insertImage", url);
+            function sendFile(file, editor, welEditable){
+                data = new FormData();
+                data.append("thumnail",files);
+                $.ajax({
+                    data: data,
+                    type: "POST",
+                    url: '/admin/products/ajax_summernote/',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(url) {
+                        $('#summernote').summernote("insertImage", url);
+                    }
+                });
             }
         });
-    }
-});
-</script>
-
+        </script>
+    </div>
 <% include ../footer.ejs %>

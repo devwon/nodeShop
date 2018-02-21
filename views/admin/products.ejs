@@ -1,56 +1,57 @@
 <% include ../header.ejs %>
+    <% include ./sidebar.ejs %>
+    <div class ="col-sm-10">
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>상품명</th>
+                <th>작성일</th>
+                <th>가격(원)</th>
+                <th></th>
+            </tr>
+            <% products.forEach( function(product){ %>
+            <tr>
+                <td>
+                    <a href="/admin/products/detail/<%=product.id%>">
+                        <%=product.name%>
+                    </a>
+                </td>
+                <td>
+                    <%=product.getDate.year%> 년
+                    <%=product.getDate.month%> 월
+                    <%=product.getDate.day%> 일
+                </td>
+                <td>
+                    <%=product.price%>
+                </td>
+                <td>
+                    <a href="/admin/products/delete/<%=product.id%>" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
+                </td>
+            </tr>
+            <% }); %>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li>
+                    <a href="<%= paginate.href(true) %>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            <% pages.forEach(function(page){ %>
+                <li class="<%= paginate.page == page.number ? 'active' : ''%>">
+                    <a href="<%= page.url %>"><%= page.number %></a>
+                </li>
+            <%})%>
 
-    <table class="table table-bordered table-hover">
-        <tr>
-            <th>상품명</th>
-            <th>작성일</th>
-            <th>가격(원)</th>
-            <th></th>
-        </tr>
-        <% products.forEach( function(product){ %>
-        <tr>
-            <td>
-                <a href="/admin/products/detail/<%=product.id%>">
-                    <%=product.name%>
-                </a>
-            </td>
-            <td>
-                <%=product.getDate.year%> 년
-                <%=product.getDate.month%> 월
-                <%=product.getDate.day%> 일
-            </td>
-            <td>
-                <%=product.price%>
-            </td>
-            <td>
-                <a href="/admin/products/delete/<%=product.id%>" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
-            </td>
-        </tr>
-        <% }); %>
-    </table>
-    <nav>
-        <ul class="pagination">
-            <li>
-                <a href="<%= paginate.href(true) %>" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        <% pages.forEach(function(page){ %>
-            <li class="<%= paginate.page == page.number ? 'active' : ''%>">
-                <a href="<%= page.url %>"><%= page.number %></a>
-            </li>
-        <%})%>
-
-        <%if(paginate.hasNextPages(pageCount)){%>
-            <li>
-                <a href="<%= paginate.href() %>">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        <%}%>
-        </ul>
-    </nav>
-    
-    <a href="/admin/products/write" class="btn btn-default">작성하기</a>
-
+            <%if(paginate.hasNextPages(pageCount)){%>
+                <li>
+                    <a href="<%= paginate.href() %>">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            <%}%>
+            </ul>
+        </nav>
+        
+        <a href="/admin/products/write" class="btn btn-default">작성하기</a>
+    </div>
 <% include ../footer.ejs %>

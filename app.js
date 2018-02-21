@@ -48,9 +48,9 @@ var checkout = require('./routes/checkout');
 var home = require('./routes/home');
 
 var app = express();
-var port = 4000;
+var port = 3000;
 
-// 확장자가 ejs 로 끝나는 뷰view 엔진을 추가한다.
+// 확장자가 ejs로 끝나는 뷰view 엔진을 추가한다.
 app.set('views', path.join(__dirname, 'views'));//console.log(__dirname);//_dirname은 내 ROUTE를 알려줌
 app.set('view engine', 'ejs');
 
@@ -124,7 +124,7 @@ var listen = require('socket.io');
 var io = listen(server);//server 붙여버리기
 //socket io passport 접근하기 위한 미들웨어 적용
 io.use(function(socket,next){//io.use
-    sessionMiddleWare(socket.request,socket.request.res,next);
+    sessionMiddleWare(socket.request, socket.request.res, next);
 });
 
 require('./libs/socketConnection')(io);//불러오고 바로 실행

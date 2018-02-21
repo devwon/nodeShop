@@ -18,6 +18,8 @@
         </div>
         <%});%>
     </div>
+
+    <div id="js-btn-wrap" class="btn-wrap"> <a href="javascript:;" class="button">더보기</a> </div>
 <style type="text/css">
 .masonry-grid img { max-width: 260px; }
 </style>
@@ -31,5 +33,19 @@
         columnWidth : 270
       });
     });
+
+    $(document).ready(function(){       
+        $('#js-btn-wrap').click(function(){
+            $.ajax({
+                url : "/",
+                type : "POST",
+                cache : false,
+                dataType: 'json',
+                data: ,
+            })
+        });
+    });
 </script>
+
+
 <% include ./footer.ejs %>

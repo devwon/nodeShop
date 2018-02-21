@@ -1,0 +1,37 @@
+<% include ../header.ejs %>
+
+    <% include ./sidebar.ejs %>
+
+    <div class="col-sm-10">
+
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>주문자(이메일)</th>
+                <th>결제상태</th>
+                <th>금액</th>
+                <th>주소</th>
+                <th>주문일</th>
+            </tr>
+            <% orderList.forEach( function(order){ %>
+            <tr>
+                <td>
+                    <a href="/admin/order/edit/<%=order.id%>">
+                        <%=order.buyer_name%> ( <%=order.buyer_email%> )
+                    </a>
+                </td>
+                <td><%=order.status%></td>
+                <td><%=order.paid_amount%></td>
+                <td><%=order.buyer_addr%></td>
+                <td>
+                    <%=order.getDate.year%> - 
+                    <%=order.getDate.month%> - 
+                    <%=order.getDate.day%>
+                </td>
+            </tr>
+            <%});%>
+        </table>
+    </div>
+
+    
+
+<% include ../footer.ejs %>

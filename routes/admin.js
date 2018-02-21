@@ -6,6 +6,7 @@ var CommentsModel = require('../models/CommentsModel');
 var loginRequired = require('../libs/loginRequired');
 var co = require('co');
 var paginate = require('express-paginate');
+var CheckoutModel = require('../models/CheckoutModel');
 
 //미들웨어 연습
 function testMiddleWare(req, res, next) {
@@ -174,6 +175,15 @@ router.post('/products/ajax_comment/delete', function (req, res) {
 //summernote editor
 router.post('/products/ajax_summernote',loginRequired,upload.single('thumnail'),function(req,res){
     res.send('/uploads/'+req.file.filename);
+});
+
+//order list
+router.get('/order', function (req, res) {
+    CheckoutModel.find(function (err, orderList) { //첫번째 인자는 err, 두번째는 받을 변수명
+        res.render('admin/orderList',
+            { orderList: orderList }
+        );
+    });
 });
 
 module.exports = router;
