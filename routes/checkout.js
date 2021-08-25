@@ -4,8 +4,8 @@ var CheckoutModel = require('../models/CheckoutModel');
 
 const { Iamporter, IamporterError } = require('iamporter');
 const iamporter = new Iamporter({
-    apiKey: '1627183331091161',
-    secret: 'vTZRWGS4n8PzYaUmlXks9WAvaDPsNgQiaPa6w3bTc0tabnwxlRZuNz0XdPq06hjg7unDxyxJz0UKorhK'
+    apiKey: '',
+    secret: ''
 });
 
 router.get('/', function (req, res) {
